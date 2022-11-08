@@ -44,8 +44,8 @@ char	*ft_strjoin(char *s1, char *s2)
 		i++;
 	}
 	res[len] = '\0';
-    // free(s1);
-    // free(s2);
+    free(s1);
+    free(s2);
 	return (res);
 }
 
@@ -72,7 +72,7 @@ int ft_strchr(char *s, char c)
 {
     int i;
 
-	i=0;
+	i = 0;
 	while (s && s[i])
 	{
 		if (s[i] == c)
@@ -82,36 +82,29 @@ int ft_strchr(char *s, char c)
 	return (-1);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*str;
 	size_t	i;
 	size_t	sizelen;
-	size_t	newlen;
 
 	i = 0;
 	if (!s)
 		return (0);
-	sizelen = ft_strlen(s + start);
-	if (start >= ft_strlen(s) || !len)
-		return (ft_strdup(""));
-	if (sizelen <= len)
-		newlen = sizelen;
-	else
-		newlen = len;
-	str = malloc(sizeof(char) * (newlen + 1));
+	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (0);
-	while (i < newlen)
+	while (i < len)
 	{
 		*(str + i) = *(s + i + start);
 		i++;
 	}
 	*(str + i) = '\0';
+	// free(s);
 	return (str);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	int	i;
 
