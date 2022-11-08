@@ -45,7 +45,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	res[len] = '\0';
     free(s1);
-    free(s2);
 	return (res);
 }
 
@@ -86,7 +85,6 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*str;
 	size_t	i;
-	size_t	sizelen;
 
 	i = 0;
 	if (!s)
@@ -100,7 +98,6 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		i++;
 	}
 	*(str + i) = '\0';
-	// free(s);
 	return (str);
 }
 

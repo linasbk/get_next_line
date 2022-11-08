@@ -13,26 +13,31 @@
 #include"get_next_line.h"
 #include<stdio.h>
 
-char	*extract_line(char **static_buff)
+static char	*extract_line(char **static_buff)
 {
 	char	*tmp;
 	char	*line;
 	int		i;
+
 	if (*static_buff == 0 || **static_buff ==0)
 		return 0;
 	i = 0;
 	i = ft_strchr(*static_buff, '\n');
-		line = ft_substr(*static_buff, 0, i + 1);
-		tmp = ft_strdup(&(*static_buff)[i + 1]);
-		free(*static_buff);
-		*static_buff = tmp;
+	line = ft_substr(*static_buff, 0, i + 1);
+	tmp = ft_strdup(&(*static_buff)[i + 1]);
+	if (tmp[0] == '\0')
+	{
+		free(tmp);
+		tmp = 0;
+	}
+	free(*static_buff);
+	*static_buff = tmp;
 	return (line);
 }
 
-int		read_lines(int fd, char **static_buff)
+static int		read_lines(int fd, char **static_buff)
 {
 	int		readed;
-	char	*tmp;
 	char	*buff;
 
 	readed = 1;
@@ -43,10 +48,12 @@ int		read_lines(int fd, char **static_buff)
 	{
 		readed = read(fd, buff, BUFFER_SIZE);
 		if (readed <= 0)
+		{
+			free(buff);
 			return (0);
+		}
 		buff[readed] = '\0';
-		tmp = ft_strjoin(*static_buff, buff);
-		*static_buff = tmp;
+		*static_buff = ft_strjoin(*static_buff, buff);
 	}
 	free(buff);
 	return (readed);
@@ -61,27 +68,27 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	//read and save
 	readed = read_lines(fd,&static_buff);
-	//extract line
-	line = extract_line(&static_buff);
 	if (!readed)
 	{
 		tmp = static_buff;
 		static_buff = 0;
 		return tmp;
 	}
+	if (readed == -1)
+		return NULL;
+	line = extract_line(&static_buff);
 	return (line);
 }
 
 int main()
 {
-	int fd = open("test", O_RDONLY);
+	int fd = open("nl", O_RDONLY);
 	char *str;
 	while((str = get_next_line(fd)))
 	{
-		printf("%s",str);
+		printf("|%s|",str);
 		free(str);
 	}
-	system("leaks a.out");
+	// system("leaks a.out");
 }
