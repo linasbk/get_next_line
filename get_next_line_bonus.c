@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsabik <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include"get_next_line_bonus.h"
+#include<limits.h>
 
 char	*extract_line(char **static_buff)
 {
@@ -62,20 +63,20 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	int			readed;
-	static char	*static_buff;
+	static char	*static_buff[OPEN_MAX];
 	char		*tmp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
 		return (NULL);
-	readed = read_lines(fd, &static_buff);
+	readed = read_lines(fd, &static_buff[fd]);
 	if (!readed)
 	{
-		tmp = static_buff;
-		static_buff = 0;
+		tmp = static_buff[fd];
+		static_buff[fd] = 0;
 		return (tmp);
 	}
 	if (readed == -1)
 		return (NULL);
-	line = extract_line(&static_buff);
+	line = extract_line(&static_buff[fd]);
 	return (line);
 }
